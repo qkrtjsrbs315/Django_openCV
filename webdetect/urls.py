@@ -15,11 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from detect import views
+from django.conf.urls.static import static
+
+from webdetect import settings
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^/(?P<stream_path>(.*?))/$',views.dynamic_stream,name="videostream"),
-    url(r'^stream/$',views.indexscreen),
+    path('admin/', admin.site.urls),
+    path('',include('detect.urls')),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
