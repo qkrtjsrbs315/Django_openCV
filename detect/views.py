@@ -81,7 +81,17 @@ def index(request):
 
 
 def user(request):
-    return render(request, 'user.html')
+    if request.method == "GET":
+        check = Check.objects.all()
+
+        if str(check[0]) == "True":
+            user = Login.objects.all()
+            user = str(user[0])
+            return render(request, 'user.html', {"user" : user})
+        else:
+            user = Login.objects.all()
+            if user == "":
+                return HttpResponse("<script>alert('Not login! Please Login!');location.href='http://127.0.0.1/'")
 
 
 def register(request):
@@ -135,18 +145,19 @@ def register_image(request):
 def login(request):
     if request.method == "GET":
         users = Login.objects.all().delete()  # admin
+        response = Check.objects.all().delete()
         return render(request, 'login.html')
     elif request.method == "POST":
-        response = Check.objects.all()
-        print("len : " + str(len(response)))
         username = request.POST.get('user_name')
-        print(username)
-        if username == "":
+        print(len(username))
+
+        if len(username) == 0:
             return HttpResponse(
                 "<script>alert('로그인 할 유저의 이름을 입력해주세요!');location.href='http://127.0.0.1:8000/';</script>")
         else:
             login = Login.objects.create(username=username)
             login.save()
+
             return redirect("login")
 
 
@@ -197,7 +208,6 @@ class VideoCamera(object):
         login_input = Login.objects.all()
         #model = train(str(name))
         name = login_input[0]
-
         models = trains()
         confidence = 0
 
@@ -228,6 +238,7 @@ class VideoCamera(object):
             if str(model_name) == str(name):
                 print("True")
                 confidence = int(prediction_value[model_name])
+
             else:
                 print("False")
             print("model name : " + str(model_name))
@@ -238,6 +249,7 @@ class VideoCamera(object):
             if confidence > 75:
                 re_save = Check.objects.create(check="True")
                 re_save.save()
+
                 print("Confidence : " + str(confidence))
                 print("same!" + " welcome " + str(name))
             elif confidence < 75:
