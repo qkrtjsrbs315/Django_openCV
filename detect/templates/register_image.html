@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    <input type="file" name="images" multiple>
+    <input type="submit">
+
+</form>
+<hr>
+{% for image in images %}
+<img src="{{image.images.url}}" alt="사진">
+{% endfor %}
+</body>
+</html>

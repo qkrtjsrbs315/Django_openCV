@@ -1,0 +1,29 @@
+{% load static %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% block body %}
+    <h1>신체 인식</h1>
+    <table>
+        <tr>
+            <td width="70%">
+                <img src="http://127.0.0.1:8000/detectme" style="width:400px;" />
+                {{ data }}
+            </td>
+            <td width="70%">
+
+            </td>
+
+        </tr>
+    </table>
+    <button><a href="http://127.0.0.1:8000/login">로그인</a></button>
+{% endblock %}
+<script>setTimeout(function(){window.location.href="/user"},20000);</script>
+
+
+</body>
+</html>

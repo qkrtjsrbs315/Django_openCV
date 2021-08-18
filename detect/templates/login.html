@@ -1,0 +1,35 @@
+{% load static %}
+{% block content %}
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>login</title>
+        <link rel="stylesheet" href="{% static 'logincss.css' %}">
+        <script type="text/javascript" src="{% static 'fa-eye.js' %}"></script>
+        <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous">
+            function onkeyup() {
+                if (window.event.keyCode === 13) {
+                    loginform.submit();
+                }
+            }
+        </script>
+    </head>
+    <body>
+    <div class="container">
+        <div class="signin-signup">
+            <form method="POST" class="sign-in-form" name="loginform">
+                {% csrf_token %}
+                <h2 class="title">로그인</h2>
+                <label for="user_name" class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="user_name" name="user_name" required placeholder="로그인"
+                           value="{{ form.id.value | default_if_none:'' }}">
+                </label>
+                <input type="submit" value="로그인" class="btn solid" onkeyup="enterkey()" onclick="location.href='http://127.0.0.1:8000/login'">
+                <a href='{% url "register" %}'>회원가입하러가기</a>
+            </form>
+        </div>
+    </div>
+    </body>
+    </html>
+{% endblock %}
