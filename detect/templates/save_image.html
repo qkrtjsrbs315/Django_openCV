@@ -7,19 +7,13 @@
 <body>
 
 {% block body %}
-    <h1>신체 인식</h1>
-    <table>
-        <tr>
-            <td width="70%">
-                <img src="http://127.0.0.1:8000/detect_image" style="width:400px;" />
-            </td>
-            <td width="70%">
-
-            </td>
-
-        </tr>
-    </table>
+    <h1>사진저장</h1>
+   <div class="save_image" style="width : 70%">
+        <img src="http://127.0.0.1:8000/detect_image" style="width:400px;" />
+   </div>
     <button onclick="location.href='http://127.0.0.1:8000/'">저장</button>
+    <script>setTimeout(function(){window.location.href="/"},20000);</script> <!--2만 millisecond == 20sec-->
+
 {% endblock %}
 
 

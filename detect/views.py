@@ -2,7 +2,6 @@ import threading
 from os import listdir
 from os.path import isfile, join
 from django.views.decorators import gzip
-from PIL import Image
 from django.shortcuts import render, redirect
 from django.http import StreamingHttpResponse, HttpResponse
 from os import makedirs
@@ -10,12 +9,11 @@ from os.path import isdir
 import cv2
 from detect.models import Photo, User, Respone, Check, Login
 import numpy as np
-from operator import itemgetter
 
 dir = "faces/"
 # data_path = "C:/Users/qkrtj/PycharmProjects/Django_openCV/media/faces/"
 face_filter = cv2.CascadeClassifier(
-    'C:/Users/qkrtj/PycharmProjects/Django_openCV/detect/haarcascade_frontalface_default.xml')
+    'C:/Users/qkrtj/PycharmProjects/Django_openCV/detect/haarcascade_frontalface_default.xml')#absolute url
 
 
 # Path for face image database
@@ -65,14 +63,10 @@ def trains():
 
     models = {}
     for model in models_dirs:
-        # 학습 시작
         result = train(model)
-        # 학습이 안되었다면 패스!
         if result is None:
             continue
-        # 학습되었으면 저장
         models[model] = result
-        print(models)
     return models
 
 
@@ -117,7 +111,6 @@ def register(request):
         elif username not in list:
             new_user = User.objects.create(username=username)
             new_user.save()
-
         # members = User.objects.all().delete()
         return redirect('save_image')
 
@@ -146,6 +139,7 @@ def login(request):
     if request.method == "GET":
         users = Login.objects.all().delete()  # admin
         response = Check.objects.all().delete()
+        response = Respone.objects.all().delete()
         return render(request, 'login.html')
     elif request.method == "POST":
         username = request.POST.get('user_name')
@@ -228,16 +222,18 @@ class VideoCamera(object):
                 result = model.predict(face)
                 prediction_value[key] = result[1]
 
+            print("list : ")
             print(prediction_value)
-            sorted(prediction_value.items(), key=lambda x: x[1],
-                   reverse=True)  ##정렬까지 구현 2021.08.18 현재 정렬 및 값 불러오기 그리고 db저장한 후 db값과 dictionary값 비교해서 login page에서 그 값을 가져오면 됨
-            for key, model in models.items():
+            sorted(prediction_value.items(), key=lambda x: x[1], reverse=True)
+            print("after"  )
+            print(prediction_value)
+            for key, model in prediction_value.items():
                 list.append(key)
 
             model_name = list[0]
             if str(model_name) == str(name):
                 print("True")
-                confidence = int(prediction_value[model_name])
+                confidence = int(prediction_value[str(name)])
 
             else:
                 print("False")
